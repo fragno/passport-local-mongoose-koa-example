@@ -6,6 +6,9 @@
     "start": "node ./bin/www",
     "debug": "node --inspect-brk=9229 ./bin/www"
   },
+  "engines": {
+    "node": ">=8.9.4"
+  },
   "dependencies": {
     "debug": "~2.0.0",
     "jade": "~1.6.0",
