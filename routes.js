@@ -1,43 +1,50 @@
-const passport = require('passport');
-const Account = require('./models/account');
-const Router = require('koa-router');
+const passport = require("koa-passport");
+const Account = require("./models/account");
+const Router = require("koa-router");
 
 const router = new Router();
 
-router.get('/', async (ctx, next) => {
-  await ctx.render('index', {user: ctx.state.user});
+router.get("/", async (ctx, next) => {
+  await ctx.render("index", { user: ctx.state.user });
 });
 
-router.get('/register', async (ctx, next) => {
-  await ctx.render('register', {});
+router.get("/register", async (ctx, next) => {
+  await ctx.render("register", {});
 });
 
-router.post('/register', async (ctx, next) => {
-  console.log('registering user');
-  Account.register(new Account({username: ctx.request.body.username}), ctx.request.body.password, function(err) {
-    if (err) {
-      console.log('error while user register!', err);
-      return next(err);
+router.post("/register", async (ctx, next) => {
+  console.log("registering user");
+  Account.register(
+    new Account({ username: ctx.request.body.username }),
+    ctx.request.body.password,
+    function(err) {
+      if (err) {
+        console.log("error while user register!", err);
+        return next(err);
+      }
+
+      console.log("user registered!");
+
+      ctx.redirect("/");
     }
-
-    console.log('user registered!');
-
-    ctx.redirect('/');
-  });
+  );
 });
 
-router.get('/login', async (ctx, next) => {
-  await ctx.render('login', { user: ctx.status.user });
+router.get("/login", async (ctx, next) => {
+  await ctx.render("login", { user: ctx.status.user });
 });
 
-router.post('/login', passport.authenticate('local', {
-  successRedirect: '/',
-  failureRedirect: '/'
-}));
+router.post(
+  "/login",
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/"
+  })
+);
 
-router.get('/logout', async (ctx, next) => {
+router.get("/logout", async (ctx, next) => {
   ctx.logout();
-  ctx.redirect('/');
+  ctx.redirect("/");
 });
 
 module.exports = router;
